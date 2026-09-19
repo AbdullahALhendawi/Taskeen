@@ -1,0 +1,48 @@
+using System.Net;
+using System.Text.Json;
+
+namespace Taskeen.Api.Middleware;
+
+public class ExceptionHandlingMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+
+    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await _next(context);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            await WriteErrorResponse(context, HttpStatusCode.NotFound, ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            await WriteErrorResponse(context, HttpStatusCode.Conflict, ex.Message);
+        }
+                     catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unhandled exception occurred while processing the request.");
+            await WriteErrorResponse(context, HttpStatusCode.InternalServerError, "An unexpected error occurred.");
+        }
+    }
+
+    private static async Task WriteErrorResponse(HttpContext context, HttpStatusCode statusCode, string message)
+    {
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)statusCode;
+
+        var errorResponse = new { error = message };
+        var json = JsonSerializer.Serialize(errorResponse);
+
+        await context.Response.WriteAsync(json);
+    }
+}
