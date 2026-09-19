@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
 import { useToast } from '../context/ToastContext';
 import ResidentForm from '../components/ResidentForm';
+import { CheckCircleIcon, UsersIcon, MapPinIcon } from '../components/icons';
+import './AddResidentPage.css';
 
 interface CreateResidentValues {
   employeeId: string;
@@ -63,25 +65,23 @@ function AddResidentPage() {
 
   if (suggestion) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '12px' }}>
-        <div style={{ width: '100%', maxWidth: '440px', backgroundColor: '#fff', border: '1px solid #F0F0F2', borderRadius: '14px', padding: '36px', boxShadow: '0 1px 3px rgba(16, 24, 40, 0.04)', textAlign: 'center' }}>
-          <h2 style={{ marginTop: 0, fontSize: '19px', fontWeight: 700, color: '#111827' }}>✅ Resident Added</h2>
-          <p style={{ color: '#6B7280', fontSize: '14px' }}>Nearest available bed found:</p>
-          <p style={{ fontWeight: 600, fontSize: '14px', color: '#4338CA', backgroundColor: '#EEF2FF', padding: '14px', borderRadius: '10px' }}>
+      <div className="form-page">
+        <div className="form-card suggestion-card">
+          <div className="icon-tile icon-tile-md" style={{ background: 'linear-gradient(135deg, #34d399, #059669)', margin: '0 auto 14px' }}>
+            <CheckCircleIcon size={24} />
+          </div>
+          <h2 className="suggestion-title">Resident Added</h2>
+          <p className="suggestion-subtitle">Nearest available bed found:</p>
+          <p className="suggestion-location">
+            <MapPinIcon size={14} className="icon-inline" style={{ marginRight: '6px' }} />
             {suggestion.buildingName} · Floor {suggestion.floorNumber} · Apt {suggestion.apartmentNumber} · Room {suggestion.roomNumber}
           </p>
 
-          <div style={{ display: 'flex', gap: '10px', marginTop: '24px' }}>
-            <button
-              onClick={handleAssignNow}
-              style={{ flex: 1, padding: '12px', fontSize: '14px', fontWeight: 600, color: '#fff', backgroundColor: '#4F46E5', border: 'none', borderRadius: '10px', cursor: 'pointer', boxShadow: '0 4px 10px rgba(79, 70, 229, 0.25)' }}
-            >
+          <div className="suggestion-actions">
+            <button onClick={handleAssignNow} className="btn btn-primary">
               Assign & Go There
             </button>
-            <button
-              onClick={handleSkip}
-              style={{ flex: 1, padding: '12px', fontSize: '14px', fontWeight: 600, color: '#374151', backgroundColor: '#F3F4F6', border: 'none', borderRadius: '10px', cursor: 'pointer' }}
-            >
+            <button onClick={handleSkip} className="btn btn-secondary">
               I'll assign later
             </button>
           </div>
@@ -92,7 +92,12 @@ function AddResidentPage() {
 
   return (
     <div>
-      <h1 style={{ textAlign: 'center', fontSize: '24px', fontWeight: 700, color: '#111827', marginBottom: '24px' }}>Add Resident</h1>
+      <div className="page-title-row" style={{ justifyContent: 'center', marginBottom: '24px' }}>
+        <div className="icon-tile icon-tile-md icon-tile-primary">
+          <UsersIcon size={22} />
+        </div>
+        <h1 className="page-title">Add Resident</h1>
+      </div>
       <ResidentForm onSubmit={handleSubmit} />
     </div>
   );

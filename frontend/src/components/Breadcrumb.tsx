@@ -11,29 +11,19 @@ interface BreadcrumbProps {
 
 function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <nav
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        marginBottom: '22px',
-        padding: 0,
-        fontSize: '13px',
-        width: 'fit-content',
-      }}
-    >
+    <nav className="breadcrumb">
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
         return (
-          <span key={item.path} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span key={item.path} className="breadcrumb-item">
             {isLast ? (
-              <span style={{ fontWeight: 600, color: '#111827' }}>{item.label}</span>
+              <span className="breadcrumb-current">{item.label}</span>
             ) : (
-              <Link to={item.path} style={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500 }}>
+              <Link to={item.path} className="breadcrumb-link">
                 {item.label}
               </Link>
             )}
-            {!isLast && <span style={{ color: '#D1D5DB' }}>›</span>}
+            {!isLast && <span className="breadcrumb-separator">›</span>}
           </span>
         );
       })}

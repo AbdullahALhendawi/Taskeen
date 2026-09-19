@@ -1,0 +1,42 @@
+.bulk-add {
+  margin-bottom: 24px;
+}
+
+.bulk-add-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.bulk-add-select,
+.bulk-add-input {
+  width: auto;
+}
+
+.bulk-add-custom {
+  width: 90px;
+}
+
+.bulk-add-extra {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--color-ink-soft);
+}
+
+.bulk-add-extra .input {
+  width: auto;
+}
+
+.bulk-add-extra-number {
+  width: 60px;
+}
+
+.bulk-add-error {
+  color: var(--color-danger);
+  font-size: 13px;
+  margin-top: 8px;
+  margin-bottom: 0;
+}

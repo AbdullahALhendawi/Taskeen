@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { PlusIcon } from './icons';
+import './BulkAddForm.css';
 
 interface BulkAddFormProps {
   label: string;
@@ -37,20 +39,14 @@ function BulkAddForm({ label, onAdd, extraField }: BulkAddFormProps) {
     setCustomValue('');
   }
 
-  const fieldStyle: React.CSSProperties = {
-    padding: '8px 12px',
-    fontSize: '14px',
-    color: '#111827',
-    backgroundColor: '#fff',
-    border: '1px solid #E5E7EB',
-    borderRadius: '10px',
-    outline: 'none',
-  };
-
   return (
-    <div style={{ marginBottom: '24px' }}>
-      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-        <select value={selected} onChange={(e) => { setSelected(e.target.value); setError(''); }} style={fieldStyle}>
+    <div className="bulk-add">
+      <div className="bulk-add-row">
+        <select
+          className="input bulk-add-select"
+          value={selected}
+          onChange={(e) => { setSelected(e.target.value); setError(''); }}
+        >
           {PRESET_OPTIONS.map((n) => (
             <option key={n} value={n}>{n}</option>
           ))}
@@ -65,46 +61,38 @@ function BulkAddForm({ label, onAdd, extraField }: BulkAddFormProps) {
             placeholder="Enter number"
             value={customValue}
             onChange={(e) => { setCustomValue(e.target.value); setError(''); }}
-            style={{ ...fieldStyle, width: '90px' }}
+            className="input bulk-add-custom"
           />
         )}
 
         {extraField && (
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#374151' }}>
+          <label className="bulk-add-extra">
             {extraField.label}:
             {extraField.options ? (
-              <select value={extraField.value} onChange={(e) => extraField.onChange(e.target.value)} style={fieldStyle}>
+              <select className="input" value={extraField.value} onChange={(e) => extraField.onChange(e.target.value)}>
                 {extraField.options.map((n) => (
                   <option key={n} value={n}>{n}</option>
                 ))}
               </select>
             ) : (
-              <input type="number" min="1" value={extraField.value} onChange={(e) => extraField.onChange(e.target.value)} style={{ ...fieldStyle, width: '60px' }} />
+              <input
+                type="number"
+                min="1"
+                value={extraField.value}
+                onChange={(e) => extraField.onChange(e.target.value)}
+                className="input bulk-add-extra-number"
+              />
             )}
           </label>
         )}
 
-        <button
-          onClick={handleClick}
-          disabled={isCustom && !customValue}
-          style={{
-            padding: '9px 20px',
-            fontSize: '14px',
-            fontWeight: 600,
-            color: '#fff',
-            backgroundColor: isCustom && !customValue ? '#A5A6F6' : '#4F46E5',
-            border: 'none',
-            borderRadius: '10px',
-            cursor: isCustom && !customValue ? 'not-allowed' : 'pointer',
-          }}
-        >
+        <button onClick={handleClick} disabled={isCustom && !customValue} className="btn btn-primary">
+          <PlusIcon size={14} />
           {label}
         </button>
       </div>
 
-      {error && (
-        <p style={{ color: '#DC2626', fontSize: '13px', marginTop: '8px', marginBottom: 0 }}>{error}</p>
-      )}
+      {error && <p className="bulk-add-error">{error}</p>}
     </div>
   );
 }

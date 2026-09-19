@@ -1,0 +1,94 @@
+.room-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.bed-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.bed-card {
+  width: 190px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s ease;
+}
+
+.bed-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.bed-card-occupied {
+  border-color: var(--color-primary-border);
+  background-color: var(--color-primary-bg);
+}
+
+.bed-card-stripe {
+  height: 6px;
+  background-color: var(--color-border);
+}
+
+.bed-card-occupied .bed-card-stripe {
+  background-color: var(--color-primary);
+}
+
+.bed-card-body {
+  padding: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bed-card-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-faint);
+  background-color: var(--color-border-subtle);
+  margin-bottom: 6px;
+}
+
+.bed-card-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-faint);
+  margin: 0;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.bed-card-resident {
+  display: block;
+  margin-top: 8px;
+  font-size: 15px;
+  color: var(--color-ink);
+}
+
+.bed-card-vacant {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--color-faint);
+  font-weight: 500;
+}
+
+.bed-card-action {
+  margin-top: 12px;
+}
+
+.bed-card-remove {
+  margin-top: 8px;
+}

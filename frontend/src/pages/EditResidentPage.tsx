@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/client';
 import { useToast } from '../context/ToastContext';
 import ResidentForm from '../components/ResidentForm';
+import { UsersIcon } from '../components/icons';
 
 interface ResidentDetail {
   id: string;
@@ -47,14 +48,19 @@ function EditResidentPage() {
     }
   }
 
-  if (isLoading) return <p style={{ padding: '24px', color: '#6B7280', fontSize: '14px' }}>Loading...</p>;
-  if (!resident) return <p style={{ padding: '24px', color: '#6B7280', fontSize: '14px' }}>Resident not found.</p>;
+  if (isLoading) return <p className="loading-text">Loading...</p>;
+  if (!resident) return <p className="loading-text">Resident not found.</p>;
 
   const { id, ...initialValues } = resident;
 
   return (
     <div>
-      <h1 style={{ textAlign: 'center', fontSize: '24px', fontWeight: 700, color: '#111827', marginBottom: '24px' }}>Edit Resident</h1>
+      <div className="page-title-row" style={{ justifyContent: 'center', marginBottom: '24px' }}>
+        <div className="icon-tile icon-tile-md icon-tile-primary">
+          <UsersIcon size={22} />
+        </div>
+        <h1 className="page-title">Edit Resident</h1>
+      </div>
       <ResidentForm initialValues={initialValues} onSubmit={handleSubmit} />
     </div>
   );

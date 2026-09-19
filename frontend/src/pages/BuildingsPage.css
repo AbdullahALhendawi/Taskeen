@@ -1,0 +1,104 @@
+.building-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.building-row {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.building-card-link {
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+  min-width: 0;
+}
+
+.building-card {
+  display: flex;
+  gap: 18px;
+  padding: 22px 24px;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+}
+
+.building-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary-border);
+  transform: translateY(-1px);
+}
+
+.building-card-icon {
+  margin-top: 2px;
+}
+
+.building-card-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.building-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.building-card-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.building-card-date {
+  font-size: 12px;
+  color: var(--color-faint);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.building-card-occupancy-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px 0 8px;
+}
+
+.building-card-occupancy-label {
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.building-card-occupancy-label-full {
+  color: #059669;
+}
+
+.building-card-progress {
+  flex: 1;
+}
+
+.building-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.building-card-meta-divider {
+  color: var(--color-border);
+}
+
+.building-delete-btn {
+  padding: 0 18px;
+}

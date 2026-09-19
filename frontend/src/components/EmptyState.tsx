@@ -1,11 +1,15 @@
+import { InboxIcon } from './icons';
+
 interface EmptyStateProps {
   message: string;
+  large?: boolean;
 }
 
-function EmptyState({ message }: EmptyStateProps) {
+function EmptyState({ message, large }: EmptyStateProps) {
   return (
-    <div style={{ padding: '28px', textAlign: 'center', color: '#9CA3AF', fontSize: '14px', border: '1px dashed #E5E7EB', borderRadius: '12px', backgroundColor: '#FAFAFA' }}>
-      <p style={{ margin: 0 }}>{message}</p>
+    <div className={large ? 'empty-state empty-state-lg' : 'empty-state'}>
+      <div className="empty-state-icon"><InboxIcon size={large ? 26 : 20} /></div>
+      <p>{message}</p>
     </div>
   );
 }

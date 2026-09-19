@@ -3,6 +3,9 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api } from '../api/client';
 import { useToast } from '../context/ToastContext';
 import { useConfirm } from '../context/ConfirmContext';
+import { HashIcon, PhoneIcon, GlobeIcon, BriefcaseIcon, MapPinIcon, TrashIcon } from '../components/icons';
+import { getInitials, getAvatarGradient } from '../utils/avatar';
+import './ResidentDetailPage.css';
 
 interface ResidentDetail {
   id: string;
@@ -56,42 +59,89 @@ function ResidentDetailPage() {
     }
   }
 
-  if (isLoading) return <p style={{ padding: '24px', color: '#6B7280', fontSize: '14px' }}>Loading...</p>;
-  if (!resident) return <p style={{ padding: '24px', color: '#6B7280', fontSize: '14px' }}>Resident not found.</p>;
-
-  const rowStyle: React.CSSProperties = { display: 'flex', gap: '10px', padding: '12px 0', borderBottom: '1px solid #F3F4F6' };
-  const labelStyle: React.CSSProperties = { fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '140px' };
-  const valueStyle: React.CSSProperties = { fontSize: '14px', color: '#111827' };
+  if (isLoading) return <p className="loading-text">Loading...</p>;
+  if (!resident) return <p className="loading-text">Resident not found.</p>;
 
   const locationText = resident.buildingName
     ? `${resident.buildingName} · Floor ${resident.floorNumber} · Apt ${resident.apartmentNumber} · Room ${resident.roomNumber} · Bed ${resident.bedNumber}`
     : 'Not accommodated';
 
+  const gradient = getAvatarGradient(resident.fullName);
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '12px' }}>
-      <div style={{ width: '100%', maxWidth: '500px', backgroundColor: '#fff', border: '1px solid #F0F0F2', borderRadius: '14px', padding: '36px', boxShadow: '0 1px 3px rgba(16, 24, 40, 0.04)' }}>
-        <h1 style={{ marginTop: 0, marginBottom: '24px', fontSize: '22px', fontWeight: 700, color: '#111827', textAlign: 'center', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{resident.fullName}</h1>
+    <div className="form-page">
+      <div className="badge-wrap fade-in">
+        <div className="badge-clip"><span className="badge-clip-hole" /></div>
+        <div className="card badge-card">
+          <div className="badge-band" style={{ background: gradient }}>
+            <span className={resident.isAccommodated ? 'badge badge-active' : 'badge badge-muted'} style={{ background: 'rgba(255,255,255,0.9)' }}>
+              {resident.isAccommodated ? 'Accommodated' : 'Not Accommodated'}
+            </span>
+          </div>
 
-        <div style={rowStyle}><span style={labelStyle}>Employee ID</span><span style={valueStyle}>{resident.employeeId}</span></div>
-        <div style={rowStyle}><span style={labelStyle}>Phone</span><span style={valueStyle}>{resident.phone || '—'}</span></div>
-        <div style={rowStyle}><span style={labelStyle}>Nationality</span><span style={valueStyle}>{resident.nationality || '—'}</span></div>
-        <div style={rowStyle}><span style={labelStyle}>Job Title</span><span style={valueStyle}>{resident.jobTitle || '—'}</span></div>
-        <div style={{ ...rowStyle, borderBottom: 'none' }}><span style={labelStyle}>Location</span><span style={valueStyle}>{locationText}</span></div>
+          <div className="badge-avatar-wrap">
+            <div className="avatar avatar-lg" style={{ background: gradient }}>
+              {getInitials(resident.fullName)}
+            </div>
+          </div>
 
-        <div style={{ display: 'flex', gap: '12px', marginTop: '28px', justifyContent: 'center' }}>
-          <Link to={`/residents/${resident.id}/edit`}>
-            <button style={{ padding: '10px 20px', fontSize: '14px', fontWeight: 600, color: '#fff', backgroundColor: '#4F46E5', border: 'none', borderRadius: '10px', cursor: 'pointer', boxShadow: '0 4px 10px rgba(79, 70, 229, 0.25)' }}>
-              Edit
-            </button>
-          </Link>
-          <button onClick={handleDeleteClick} style={{ padding: '10px 20px', fontSize: '14px', fontWeight: 600, color: '#DC2626', backgroundColor: '#FEF2F2', border: 'none', borderRadius: '10px', cursor: 'pointer' }}>
-            Delete
-          </button>
-          <Link to="/residents">
-            <button style={{ padding: '10px 20px', fontSize: '14px', fontWeight: 600, color: '#374151', backgroundColor: '#F3F4F6', border: 'none', borderRadius: '10px', cursor: 'pointer' }}>
-              Back to List
-            </button>
-          </Link>
+          <div className="badge-body">
+            <h1 className="badge-name">{resident.fullName}</h1>
+            <p className="badge-role">{resident.jobTitle || 'Resident'}</p>
+
+            <div className="badge-divider" />
+
+            <div className="badge-details">
+              <div className="badge-detail-row">
+                <div className="badge-detail-icon"><HashIcon size={16} /></div>
+                <div className="badge-detail-text">
+                  <p className="badge-detail-label">Employee ID</p>
+                  <p className="badge-detail-value">{resident.employeeId}</p>
+                </div>
+              </div>
+              <div className="badge-detail-row">
+                <div className="badge-detail-icon"><PhoneIcon size={16} /></div>
+                <div className="badge-detail-text">
+                  <p className="badge-detail-label">Phone</p>
+                  <p className="badge-detail-value">{resident.phone || '—'}</p>
+                </div>
+              </div>
+              <div className="badge-detail-row">
+                <div className="badge-detail-icon"><GlobeIcon size={16} /></div>
+                <div className="badge-detail-text">
+                  <p className="badge-detail-label">Nationality</p>
+                  <p className="badge-detail-value">{resident.nationality || '—'}</p>
+                </div>
+              </div>
+              <div className="badge-detail-row">
+                <div className="badge-detail-icon"><BriefcaseIcon size={16} /></div>
+                <div className="badge-detail-text">
+                  <p className="badge-detail-label">Job Title</p>
+                  <p className="badge-detail-value">{resident.jobTitle || '—'}</p>
+                </div>
+              </div>
+              <div className="badge-detail-row">
+                <div className="badge-detail-icon"><MapPinIcon size={16} /></div>
+                <div className="badge-detail-text">
+                  <p className="badge-detail-label">Location</p>
+                  <p className="badge-detail-value">{locationText}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="detail-actions">
+              <Link to={`/residents/${resident.id}/edit`}>
+                <button className="btn btn-primary">Edit</button>
+              </Link>
+              <button onClick={handleDeleteClick} className="btn btn-danger-subtle">
+                <TrashIcon size={15} />
+                Delete
+              </button>
+              <Link to="/residents">
+                <button className="btn btn-secondary">Back to List</button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>

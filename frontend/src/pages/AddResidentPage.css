@@ -1,0 +1,35 @@
+.suggestion-card {
+  text-align: center;
+}
+
+.suggestion-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin-bottom: 8px;
+}
+
+.suggestion-subtitle {
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.suggestion-location {
+  font-weight: 600;
+  font-size: 14px;
+  color: #4338ca;
+  background-color: var(--color-primary-bg);
+  padding: 14px;
+  border-radius: var(--radius-md);
+  margin-top: 12px;
+}
+
+.suggestion-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.suggestion-actions .btn {
+  flex: 1;
+}

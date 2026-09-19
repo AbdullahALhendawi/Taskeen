@@ -3,6 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import { api } from '../api/client';
 import { useToast } from '../context/ToastContext';
 import Breadcrumb from '../components/Breadcrumb';
+import { BedIcon, PlusIcon, ArrowLeftIcon } from '../components/icons';
+import { getInitials, getAvatarGradient } from '../utils/avatar';
+import './RoomPage.css';
 
 interface Bed {
   id: string;
@@ -97,8 +100,8 @@ function RoomPage() {
     }
   }
 
-  if (isLoading) return <p style={{ padding: '24px', color: '#6B7280', fontSize: '14px' }}>Loading room...</p>;
-  if (!room) return <p style={{ padding: '24px', color: '#6B7280', fontSize: '14px' }}>Room not found.</p>;
+  if (isLoading) return <p className="loading-text">Loading room...</p>;
+  if (!room) return <p className="loading-text">Room not found.</p>;
 
   return (
     <div>
@@ -107,60 +110,60 @@ function RoomPage() {
         { label: buildingName, path: `/buildings/${buildingId}` },
       ]} />
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 700, color: '#111827' }}>Room {room.roomNumber}</h1>
-        <Link
-          to={`/buildings/${buildingId}`}
-          style={{
-            fontSize: '14px', fontWeight: 600, color: '#4F46E5', textDecoration: 'none',
-            border: '1px solid #E0E1FA', backgroundColor: '#F5F5FF', padding: '9px 16px', borderRadius: '10px',
-          }}
-        >
-          ← Back to {buildingName} (pick another room)
+      <div className="room-page-header">
+        <div className="page-title-row">
+          <div className="icon-tile icon-tile-md icon-tile-primary">
+            <BedIcon size={22} />
+          </div>
+          <h1 className="page-title">Room {room.roomNumber}</h1>
+        </div>
+        <Link to={`/buildings/${buildingId}`} className="btn-link">
+          <ArrowLeftIcon size={15} />
+          Back to {buildingName} (pick another room)
         </Link>
       </div>
 
       <div style={{ marginBottom: '20px' }}>
-        <button
-          onClick={handleAddBed}
-          style={{ padding: '10px 18px', fontSize: '14px', fontWeight: 600, color: '#fff', backgroundColor: '#4F46E5', border: 'none', borderRadius: '10px', cursor: 'pointer', boxShadow: '0 4px 10px rgba(79, 70, 229, 0.25)' }}
-        >
-          + Add Bed to this Room
+        <button onClick={handleAddBed} className="btn btn-primary">
+          <PlusIcon size={16} />
+          Add Bed to this Room
         </button>
       </div>
 
-      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+      <div className="bed-grid fade-in-stagger">
         {room.beds.map((bed) => {
           const isOccupied = bed.residentId !== null;
           return (
-            <div key={bed.id} style={{
-              width: '190px', border: '1px solid', borderColor: isOccupied ? '#C7D2FE' : '#F0F0F2',
-              borderRadius: '14px', backgroundColor: isOccupied ? '#EEF2FF' : '#fff', overflow: 'hidden',
-              boxShadow: '0 1px 3px rgba(16, 24, 40, 0.04)',
-            }}>
-              <div style={{ height: '6px', backgroundColor: isOccupied ? '#4F46E5' : '#E5E7EB' }} />
-              <div style={{ padding: '16px', textAlign: 'center' }}>
-                <p style={{ fontSize: '12px', fontWeight: 600, color: '#9CA3AF', margin: 0, letterSpacing: '0.03em', textTransform: 'uppercase' }}>Bed {bed.bedNumber}</p>
+            <div key={bed.id} className={isOccupied ? 'bed-card bed-card-occupied' : 'bed-card'}>
+              <div className="bed-card-stripe" />
+              <div className="bed-card-body">
+                {isOccupied ? (
+                  <div className="avatar avatar-sm bed-card-icon" style={{ background: getAvatarGradient(bed.residentName ?? '') }}>
+                    {getInitials(bed.residentName ?? '?')}
+                  </div>
+                ) : (
+                  <div className="bed-card-icon">
+                    <BedIcon size={16} />
+                  </div>
+                )}
+                <p className="bed-card-label">Bed {bed.bedNumber}</p>
                 {isOccupied ? (
                   <>
-                    <strong style={{ display: 'block', marginTop: '8px', fontSize: '15px', color: '#111827' }}>{bed.residentName}</strong>
-                    <div style={{ marginTop: '12px' }}>
-                      <button
-                        onClick={() => handleUnassign(bed.id)}
-                        style={{ padding: '7px 14px', fontSize: '12px', fontWeight: 600, color: '#4F46E5', backgroundColor: '#fff', border: '1px solid #C7D2FE', borderRadius: '8px', cursor: 'pointer' }}
-                      >
+                    <strong className="bed-card-resident">{bed.residentName}</strong>
+                    <div className="bed-card-action">
+                      <button onClick={() => handleUnassign(bed.id)} className="btn btn-outline btn-xs">
                         Unassign
                       </button>
                     </div>
                   </>
                 ) : (
                   <>
-                    <span style={{ display: 'block', marginTop: '8px', fontSize: '14px', color: '#9CA3AF', fontWeight: 500 }}>Vacant</span>
-                    <div style={{ marginTop: '12px' }}>
+                    <span className="bed-card-vacant">Vacant</span>
+                    <div className="bed-card-action">
                       <select
                         value=""
                         onChange={(e) => { if (e.target.value) handleAssign(bed.id, e.target.value); }}
-                        style={{ width: '100%', padding: '7px 8px', fontSize: '13px', color: '#111827', backgroundColor: '#fff', border: '1px solid #E5E7EB', borderRadius: '8px', outline: 'none' }}
+                        className="input input-sm"
                       >
                         <option value="">Select resident</option>
                         {availableResidents.map((r) => (
@@ -168,8 +171,8 @@ function RoomPage() {
                         ))}
                       </select>
                     </div>
-                    <div style={{ marginTop: '8px' }}>
-                      <button onClick={() => handleRemoveBed(bed.id)} style={{ fontSize: '11px', fontWeight: 600, color: '#DC2626', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}>Remove Bed</button>
+                    <div className="bed-card-remove">
+                      <button onClick={() => handleRemoveBed(bed.id)} className="btn-ghost">Remove Bed</button>
                     </div>
                   </>
                 )}

@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { api } from '../api/client';
 import { useToast } from '../context/ToastContext';
 import { useConfirm } from '../context/ConfirmContext';
+import { BuildingIcon, PlusIcon, TrashIcon } from '../components/icons';
+import EmptyState from '../components/EmptyState';
+import './BuildingsPage.css';
 
 interface BuildingSummary {
   id: string;
@@ -57,57 +60,83 @@ function BuildingsPage() {
   }
 
   if (isLoading) {
-    return <p style={{ padding: '24px', color: '#6B7280', fontSize: '14px' }}>Loading buildings...</p>;
+    return <p className="loading-text">Loading buildings...</p>;
   }
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
-        <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#111827', margin: 0 }}>Buildings</h1>
-          <p style={{ fontSize: '14px', color: '#6B7280', margin: '4px 0 0' }}>Manage your properties and track occupancy</p>
+      <div className="page-header">
+        <div className="page-title-row">
+          <div className="icon-tile icon-tile-md icon-tile-primary">
+            <BuildingIcon size={24} />
+          </div>
+          <div>
+            <h1 className="page-title">Buildings</h1>
+            <p className="page-subtitle">Manage your properties and track occupancy</p>
+          </div>
         </div>
         <Link to="/buildings/new">
-          <button style={{ padding: '10px 20px', fontSize: '14px', fontWeight: 600, color: '#fff', backgroundColor: '#4F46E5', border: 'none', borderRadius: '10px', cursor: 'pointer', boxShadow: '0 4px 10px rgba(79, 70, 229, 0.25)' }}>
-            + Add Building
+          <button className="btn btn-primary">
+            <PlusIcon size={16} />
+            Add Building
           </button>
         </Link>
       </div>
 
       {buildings.length === 0 ? (
-        <div style={{ backgroundColor: '#fff', border: '1px solid #F0F0F2', borderRadius: '14px', padding: '40px', textAlign: 'center', color: '#6B7280', fontSize: '14px' }}>
-          No buildings yet. Click "Add Building" to get started.
-        </div>
+        <EmptyState large message='No buildings yet. Click "Add Building" to get started.' />
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {buildings.map((building) => (
-            <div key={building.id} style={{ display: 'flex', alignItems: 'stretch', gap: '10px' }}>
-              <Link to={`/buildings/${building.id}`} style={{ textDecoration: 'none', color: 'inherit', flex: 1 }}>
-                <div style={{ backgroundColor: '#fff', border: '1px solid #F0F0F2', borderRadius: '14px', padding: '22px 24px', cursor: 'pointer', boxShadow: '0 1px 3px rgba(16, 24, 40, 0.04)', transition: 'box-shadow 0.15s ease' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                    <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#111827' }}>{building.name}</h2>
-                    <span style={{ fontSize: '12px', color: '#9CA3AF' }}>Created {formatDate(building.createdAt)}</span>
+        <div className="building-list fade-in-stagger">
+          {buildings.map((building) => {
+            const isFull = building.totalBeds > 0 && building.occupiedBeds === building.totalBeds;
+            const percent = building.totalBeds > 0 ? Math.round((building.occupiedBeds / building.totalBeds) * 100) : 0;
+
+            return (
+              <div key={building.id} className="building-row">
+                <Link to={`/buildings/${building.id}`} className="building-card-link">
+                  <div className="card building-card">
+                    <div className="icon-tile icon-tile-md icon-tile-primary building-card-icon">
+                      <BuildingIcon size={22} />
+                    </div>
+                    <div className="building-card-main">
+                      <div className="building-card-top">
+                        <h2 className="building-card-name">{building.name}</h2>
+                        <span className="building-card-date">Created {formatDate(building.createdAt)}</span>
+                      </div>
+
+                      <div className="building-card-occupancy-row">
+                        <span className={isFull ? 'building-card-occupancy-label building-card-occupancy-label-full' : 'building-card-occupancy-label'}>
+                          {building.occupiedBeds} / {building.totalBeds} beds occupied
+                        </span>
+                        <div className="progress-track building-card-progress">
+                          <div
+                            className={isFull ? 'progress-fill progress-fill-full' : 'progress-fill'}
+                            style={{ width: `${percent}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="building-card-meta">
+                        <span>{building.floorCount} floor{building.floorCount !== 1 ? 's' : ''}</span>
+                        <span className="building-card-meta-divider">|</span>
+                        <span>{building.apartmentCount} apartment{building.apartmentCount !== 1 ? 's' : ''}</span>
+                        <span className="building-card-meta-divider">|</span>
+                        <span>{building.roomCount} room{building.roomCount !== 1 ? 's' : ''}</span>
+                      </div>
+                    </div>
                   </div>
-                  <p style={{ margin: '10px 0', color: '#4F46E5', fontWeight: 700, fontSize: '14px' }}>
-                    {building.occupiedBeds} / {building.totalBeds} beds occupied
-                  </p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#6B7280' }}>
-                    <span>{building.floorCount} floor{building.floorCount !== 1 ? 's' : ''}</span>
-                    <span style={{ color: '#E5E7EB' }}>|</span>
-                    <span>{building.apartmentCount} apartment{building.apartmentCount !== 1 ? 's' : ''}</span>
-                    <span style={{ color: '#E5E7EB' }}>|</span>
-                    <span>{building.roomCount} room{building.roomCount !== 1 ? 's' : ''}</span>
-                  </div>
-                </div>
-              </Link>
-              <button
-                onClick={() => handleDeleteClick(building.id, building.name)}
-                style={{ padding: '0 18px', fontSize: '13px', fontWeight: 600, color: '#DC2626', backgroundColor: '#fff', border: '1px solid #F0F0F2', borderRadius: '14px', cursor: 'pointer' }}
-              >
-                Delete
-              </button>
-            </div>
-          ))}
+                </Link>
+                <button
+                  onClick={() => handleDeleteClick(building.id, building.name)}
+                  className="btn btn-danger-outline building-delete-btn"
+                  title="Delete building"
+                >
+                  <TrashIcon size={15} />
+                  Delete
+                </button>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

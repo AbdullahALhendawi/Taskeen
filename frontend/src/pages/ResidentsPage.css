@@ -1,0 +1,77 @@
+.residents-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.residents-search-wrap {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.residents-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-faint);
+  pointer-events: none;
+}
+
+.residents-search {
+  padding-left: 40px;
+}
+
+.resident-row-avatar {
+  flex-shrink: 0;
+}
+
+.resident-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.resident-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  gap: 16px;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.resident-row:hover {
+  transform: translateX(2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary-border);
+}
+
+.resident-row-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.resident-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.resident-row-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.resident-row-name:hover {
+  color: var(--color-primary);
+}
+
+.resident-row-job {
+  font-size: 13px;
+  color: var(--color-muted);
+}

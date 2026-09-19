@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client';
 import { useToast } from '../context/ToastContext';
+import { UsersIcon, PlusIcon, SearchIcon } from '../components/icons';
+import { getInitials, getAvatarGradient } from '../utils/avatar';
+import EmptyState from '../components/EmptyState';
+import './ResidentsPage.css';
 
 interface Resident {
   id: string;
@@ -34,52 +38,57 @@ function ResidentsPage() {
   }
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 700, color: '#111827' }}>Residents</h1>
-          <p style={{ fontSize: '14px', color: '#6B7280', margin: '4px 0 0' }}>View and manage everyone assigned to housing</p>
+    <div className="residents-page">
+      <div className="page-header">
+        <div className="page-title-row">
+          <div className="icon-tile icon-tile-md icon-tile-primary">
+            <UsersIcon size={22} />
+          </div>
+          <div>
+            <h1 className="page-title">Residents</h1>
+            <p className="page-subtitle">View and manage everyone assigned to housing</p>
+          </div>
         </div>
         <Link to="/residents/new" style={{ textDecoration: 'none' }}>
-          <button style={{ padding: '10px 20px', fontSize: '14px', fontWeight: 600, color: '#fff', backgroundColor: '#4F46E5', border: 'none', borderRadius: '10px', cursor: 'pointer', boxShadow: '0 4px 10px rgba(79, 70, 229, 0.25)' }}>
-            + Add Resident
+          <button className="btn btn-primary">
+            <PlusIcon size={16} />
+            Add Resident
           </button>
         </Link>
       </div>
 
-      <input
-        type="text"
-        placeholder="Search by name..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ width: '100%', padding: '11px 16px', fontSize: '14px', color: '#111827', border: '1px solid #E5E7EB', borderRadius: '10px', marginBottom: '20px', boxSizing: 'border-box', outline: 'none', backgroundColor: '#fff' }}
-      />
+      <div className="residents-search-wrap">
+        <SearchIcon size={17} className="residents-search-icon" />
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="input residents-search"
+        />
+      </div>
 
       {isLoading ? (
-        <p style={{ color: '#6B7280', fontSize: '14px' }}>Loading...</p>
+        <p className="loading-text" style={{ padding: 0 }}>Loading...</p>
       ) : residents.length === 0 ? (
-        <div style={{ backgroundColor: '#fff', border: '1px solid #F0F0F2', borderRadius: '14px', padding: '40px', textAlign: 'center', color: '#6B7280', fontSize: '14px' }}>
-          {searchTerm ? `No residents found matching "${searchTerm}".` : 'No residents yet. Click "Add Resident" to get started.'}
-        </div>
+        <EmptyState large message={searchTerm ? `No residents found matching "${searchTerm}".` : 'No residents yet. Click "Add Resident" to get started.'} />
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div className="resident-list fade-in-stagger">
           {residents.map((resident) => (
-            <div
-              key={resident.id}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid #F0F0F2', borderRadius: '14px', padding: '16px 20px', backgroundColor: '#fff', boxShadow: '0 1px 3px rgba(16, 24, 40, 0.04)' }}
-            >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <Link to={`/residents/${resident.id}`} style={{ fontWeight: 700, fontSize: '15px', color: '#111827', textDecoration: 'none' }}>
-                  {resident.fullName}
-                </Link>
-                <span style={{ fontSize: '13px', color: '#6B7280' }}>{resident.jobTitle}</span>
+            <div key={resident.id} className="card resident-row">
+              <div className="resident-row-left">
+                <div className="avatar avatar-md resident-row-avatar" style={{ background: getAvatarGradient(resident.fullName) }}>
+                  {getInitials(resident.fullName)}
+                </div>
+                <div className="resident-row-info">
+                  <Link to={`/residents/${resident.id}`} className="resident-row-name">
+                    {resident.fullName}
+                  </Link>
+                  <span className="resident-row-job">{resident.jobTitle}</span>
+                </div>
               </div>
 
-              <span style={{
-                fontSize: '12px', fontWeight: 600, padding: '5px 12px', borderRadius: '20px',
-                backgroundColor: resident.isAccommodated ? '#EEF2FF' : '#F3F4F6',
-                color: resident.isAccommodated ? '#4F46E5' : '#6B7280',
-              }}>
+              <span className={resident.isAccommodated ? 'badge badge-active' : 'badge badge-muted'}>
                 {resident.isAccommodated ? 'Accommodated' : 'Not Accommodated'}
               </span>
             </div>

@@ -6,6 +6,8 @@ import { useConfirm } from '../context/ConfirmContext';
 import Breadcrumb from '../components/Breadcrumb';
 import BulkAddForm from '../components/BulkAddForm';
 import EmptyState from '../components/EmptyState';
+import { BuildingIcon, DoorIcon, BedIcon, TrashIcon } from '../components/icons';
+import './BuildingGridPage.css';
 
 interface BedDetail {
   id: string;
@@ -34,25 +36,18 @@ interface BuildingDetail {
   floors: FloorDetail[];
 }
 
-function getRoomColor(occupied: number, total: number) {
-  if (occupied === 0) return { bg: '#F9FAFB', border: '#D1D5DB', text: '#6B7280' };
-  if (occupied === total) return { bg: '#EEF2FF', border: '#4F46E5', text: '#4338CA' };
-  return { bg: '#FFFBEB', border: '#F59E0B', text: '#B45309' };
+function getRoomStatus(occupied: number, total: number) {
+  if (occupied === 0) return 'empty';
+  if (occupied === total) return 'full';
+  return 'partial';
 }
 
 function ColorLegend() {
-  const legendItemStyle: React.CSSProperties = {
-    display: 'flex', alignItems: 'center', gap: '7px', fontSize: '13px', color: '#4B5563', fontWeight: 500,
-  };
-  const swatchStyle = (bg: string, border: string): React.CSSProperties => ({
-    width: '12px', height: '12px', borderRadius: '4px', backgroundColor: bg, border: `2px solid ${border}`,
-  });
-
   return (
-    <div style={{ display: 'flex', gap: '20px', marginBottom: '24px', padding: '12px 18px', backgroundColor: '#fff', border: '1px solid #F0F0F2', borderRadius: '12px', boxShadow: '0 1px 3px rgba(16, 24, 40, 0.04)', width: 'fit-content' }}>
-      <div style={legendItemStyle}><div style={swatchStyle('#F9FAFB', '#D1D5DB')} /><span>Empty</span></div>
-      <div style={legendItemStyle}><div style={swatchStyle('#FFFBEB', '#F59E0B')} /><span>Partially Full</span></div>
-      <div style={legendItemStyle}><div style={swatchStyle('#EEF2FF', '#4F46E5')} /><span>Full</span></div>
+    <div className="card legend">
+      <div className="legend-item"><div className="legend-swatch legend-swatch-empty" /><span>Empty</span></div>
+      <div className="legend-item"><div className="legend-swatch legend-swatch-partial" /><span>Partially Full</span></div>
+      <div className="legend-item"><div className="legend-swatch legend-swatch-full" /><span>Full</span></div>
     </div>
   );
 }
@@ -164,19 +159,14 @@ function BuildingGridPage() {
   }
 
   if (isLoading) {
-    return <p style={{ padding: '24px', color: '#6B7280', fontSize: '14px' }}>Loading building...</p>;
+    return <p className="loading-text">Loading building...</p>;
   }
 
   if (!building) {
-    return <p style={{ padding: '24px', color: '#6B7280', fontSize: '14px' }}>Building not found.</p>;
+    return <p className="loading-text">Building not found.</p>;
   }
 
   const sortedFloors = [...building.floors].sort((a, b) => a.floorNumber - b.floorNumber);
-
-  const dangerButtonStyle: React.CSSProperties = {
-    padding: '6px 14px', fontSize: '12px', fontWeight: 600, color: '#DC2626',
-    backgroundColor: '#fff', border: '1px solid #FCA5A5', borderRadius: '8px', cursor: 'pointer',
-  };
 
   return (
     <div>
@@ -184,7 +174,12 @@ function BuildingGridPage() {
         { label: 'Buildings', path: '/' },
         { label: building.name, path: `/buildings/${buildingId}` },
       ]} />
-      <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#111827', marginBottom: '20px' }}>{building.name}</h1>
+      <div className="page-title-row" style={{ marginBottom: '20px' }}>
+        <div className="icon-tile icon-tile-md icon-tile-primary">
+          <BuildingIcon size={22} />
+        </div>
+        <h1 className="page-title">{building.name}</h1>
+      </div>
 
       <ColorLegend />
 
@@ -196,21 +191,26 @@ function BuildingGridPage() {
         sortedFloors.map((floor) => {
           const sortedApartments = [...floor.apartments].sort((a, b) => a.apartmentNumber - b.apartmentNumber);
 
+          const apartmentTotal = floor.apartments.length;
+          const roomTotal = floor.apartments.reduce((sum, a) => sum + a.rooms.length, 0);
+
           return (
-            <div key={floor.id} style={{ backgroundColor: '#fff', border: '1px solid #F0F0F2', borderRadius: '14px', padding: '20px', marginBottom: '18px', boxShadow: '0 1px 3px rgba(16, 24, 40, 0.04)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  width: '46px', height: '46px', backgroundColor: '#312E81', color: '#fff',
-                  fontWeight: 700, fontSize: '16px', borderRadius: '14px', letterSpacing: '-0.02em',
-                  boxShadow: '0 4px 10px rgba(49, 46, 129, 0.3)',
-                }}>
-                  F{floor.floorNumber}
-                </span>
-                <button onClick={() => handleDeleteFloor(floor.id, floor.floorNumber)} style={dangerButtonStyle}>Delete Floor</button>
+            <div key={floor.id} className="card floor-card fade-in">
+              <div className="floor-header">
+                <div className="floor-header-left">
+                  <span className="floor-badge">F{floor.floorNumber}</span>
+                  <div>
+                    <div className="floor-title">Floor {floor.floorNumber}</div>
+                    <div className="floor-stats">{apartmentTotal} apartment{apartmentTotal !== 1 ? 's' : ''} · {roomTotal} room{roomTotal !== 1 ? 's' : ''}</div>
+                  </div>
+                </div>
+                <button onClick={() => handleDeleteFloor(floor.id, floor.floorNumber)} className="btn btn-danger-outline btn-sm">
+                  <TrashIcon size={13} />
+                  Delete Floor
+                </button>
               </div>
 
-              <div style={{ marginTop: '14px' }}>
+              <div className="floor-body">
                 <BulkAddForm label="Add Apt(s)" onAdd={(count) => handleAddApartments(floor.id, count)} />
               </div>
 
@@ -221,19 +221,22 @@ function BuildingGridPage() {
                   const sortedRooms = [...apartment.rooms].sort((a, b) => a.roomNumber - b.roomNumber);
 
                   return (
-                    <div key={apartment.id} style={{ backgroundColor: '#FAFAFA', border: '1px solid #F0F0F2', borderRadius: '12px', padding: '16px', marginTop: '12px', marginLeft: '16px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{
-                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                          width: '40px', height: '40px', backgroundColor: '#EEF2FF', color: '#4338CA',
-                          border: '1px solid #C7D2FE', fontWeight: 700, fontSize: '14px', borderRadius: '12px', letterSpacing: '-0.02em',
-                        }}>
-                          A{apartment.apartmentNumber}
-                        </span>
-                        <button onClick={() => handleDeleteApartment(apartment.id, apartment.apartmentNumber)} style={{ ...dangerButtonStyle, fontSize: '11px', padding: '5px 12px' }}>Delete Apt</button>
+                    <div key={apartment.id} className="apartment-card fade-in">
+                      <div className="apartment-header">
+                        <div className="apartment-header-left">
+                          <span className="apartment-badge">A{apartment.apartmentNumber}</span>
+                          <span className="apartment-title">
+                            <DoorIcon size={14} className="icon-inline" style={{ marginRight: '6px' }} />
+                            Apartment {apartment.apartmentNumber}
+                          </span>
+                        </div>
+                        <button onClick={() => handleDeleteApartment(apartment.id, apartment.apartmentNumber)} className="btn btn-danger-outline btn-xs">
+                          <TrashIcon size={12} />
+                          Delete Apt
+                        </button>
                       </div>
 
-                      <div style={{ marginTop: '12px' }}>
+                      <div className="apartment-body">
                         <BulkAddForm
                           label="Add Room(s)"
                           onAdd={(count) => handleAddRooms(apartment.id, count, Number(getBedsPerRoom(apartment.id)))}
@@ -249,11 +252,11 @@ function BuildingGridPage() {
                       {sortedRooms.length === 0 ? (
                         <EmptyState message="No rooms yet in this apartment." />
                       ) : (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+                        <div className="room-grid">
                           {sortedRooms.map((room) => {
                             const totalBeds = room.beds.length;
                             const occupiedBeds = room.beds.filter((b) => b.residentId !== null).length;
-                            const color = getRoomColor(occupiedBeds, totalBeds);
+                            const status = getRoomStatus(occupiedBeds, totalBeds);
 
                             const occupantNames = room.beds
                               .filter((b) => b.residentName !== null)
@@ -266,25 +269,22 @@ function BuildingGridPage() {
                                 key={room.id}
                                 onClick={() => navigate(`/buildings/${buildingId}/rooms/${room.id}`)}
                                 title={tooltipText}
-                                style={{
-                                  width: '66px', height: '66px',
-                                  border: `2px solid ${color.border}`, backgroundColor: color.bg,
-                                  borderRadius: '12px', display: 'flex', flexDirection: 'column',
-                                  alignItems: 'center', justifyContent: 'center',
-                                  cursor: 'pointer', position: 'relative',
-                                  boxShadow: '0 1px 2px rgba(16, 24, 40, 0.05)',
-                                  transition: 'transform 0.1s ease, box-shadow 0.1s ease',
-                                }}
+                                className={`room-tile room-tile-${status}`}
                               >
-                                <span style={{ fontWeight: 700, fontSize: '15px', color: color.text }}>{room.roomNumber}</span>
-                                <span style={{ fontSize: '11px', fontWeight: 500, color: color.text, opacity: 0.85 }}>{occupiedBeds}/{totalBeds}</span>
+                                <span className="room-tile-number">{room.roomNumber}</span>
+                                <span className="room-tile-beds">
+                                  {room.beds.map((bed) => (
+                                    <BedIcon
+                                      key={bed.id}
+                                      size={12}
+                                      className={bed.residentId !== null ? 'room-tile-bed-icon room-tile-bed-icon-filled' : 'room-tile-bed-icon'}
+                                    />
+                                  ))}
+                                </span>
+                                <span className="room-tile-occupancy">{occupiedBeds}/{totalBeds} beds</span>
                                 <button
                                   onClick={(e) => { e.stopPropagation(); handleDeleteRoom(room.id, room.roomNumber); }}
-                                  style={{
-                                    position: 'absolute', top: '-7px', right: '-7px', fontSize: '11px', width: '18px', height: '18px',
-                                    lineHeight: '1', padding: 0, borderRadius: '50%', border: '1px solid #F0F0F2',
-                                    backgroundColor: '#fff', color: '#9CA3AF', boxShadow: '0 1px 2px rgba(16, 24, 40, 0.08)', cursor: 'pointer',
-                                  }}
+                                  className="room-tile-delete"
                                   title="Delete room"
                                 >×</button>
                               </div>

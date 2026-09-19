@@ -70,45 +70,34 @@ function ResidentForm({ initialValues, onSubmit }: ResidentFormProps) {
     onSubmit(values);
   }
 
-  const fieldStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: '6px' };
-  const labelStyle: React.CSSProperties = { fontSize: '13px', fontWeight: 600, color: '#374151' };
-  const inputStyle: React.CSSProperties = {
-    padding: '10px 14px', fontSize: '14px', color: '#111827', border: '1px solid #E5E7EB',
-    borderRadius: '10px', width: '100%', boxSizing: 'border-box', outline: 'none', backgroundColor: '#fff',
-  };
-  const errorStyle: React.CSSProperties = { fontSize: '13px', color: '#DC2626', fontWeight: 500 };
-
     function renderField(field: keyof typeof values, label: string, placeholder: string, maxLen: number = 60) {
     return (
-      <div style={fieldStyle}>
-        <label style={labelStyle}>{label}</label>
+      <div className="field">
+        <label className="field-label">{label}</label>
         <input
           type="text"
           placeholder={placeholder}
           value={values[field]}
           maxLength={maxLen}
           onChange={(e) => handleChange(field, e.target.value)}
-          style={{ ...inputStyle, borderColor: errors[field] ? '#DC2626' : '#E5E7EB' }}
+          className={errors[field] ? 'input input-invalid' : 'input'}
         />
-        {errors[field] && <span style={errorStyle}>{errors[field]}</span>}
+        {errors[field] && <span className="field-error">{errors[field]}</span>}
       </div>
     );
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '12px' }}>
-      <div style={{ width: '100%', maxWidth: '440px', backgroundColor: '#fff', border: '1px solid #F0F0F2', borderRadius: '14px', padding: '36px', boxShadow: '0 1px 3px rgba(16, 24, 40, 0.04)' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div className="form-page">
+      <div className="form-card">
+        <div className="form-fields">
           {renderField('employeeId', 'Employee ID', 'e.g. EMP004', 20)}
           {renderField('fullName', 'Full Name', 'e.g. Sara Ahmed', 60)}
           {renderField('phone', 'Phone', 'e.g. 0501234567', 20)}
           {renderField('nationality', 'Nationality', 'e.g. Egyptian', 60)}
           {renderField('jobTitle', 'Job Title', 'e.g. Technician', 60)}
 
-          <button
-            onClick={handleSubmit}
-            style={{ marginTop: '8px', padding: '12px', fontSize: '15px', fontWeight: 600, color: '#fff', backgroundColor: '#4F46E5', border: 'none', borderRadius: '10px', cursor: 'pointer', boxShadow: '0 4px 10px rgba(79, 70, 229, 0.25)' }}
-          >
+          <button onClick={handleSubmit} className="btn btn-primary btn-lg">
             Save
           </button>
         </div>

@@ -1,0 +1,232 @@
+.legend {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+  padding: 12px 18px;
+  width: fit-content;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--color-ink-soft);
+  font-weight: 500;
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+}
+
+.legend-swatch-empty {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.legend-swatch-partial {
+  background-color: var(--color-warning-bg);
+  border-color: var(--color-warning);
+}
+
+.legend-swatch-full {
+  background-color: var(--color-primary-bg);
+  border-color: var(--color-primary);
+}
+
+.floor-card {
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.floor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.floor-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.floor-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  background: linear-gradient(135deg, #4338ca, #312e81);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: var(--radius-lg);
+  letter-spacing: -0.02em;
+  box-shadow: 0 4px 10px rgba(49, 46, 129, 0.3);
+}
+
+.floor-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.floor-stats {
+  font-size: 12.5px;
+  color: var(--color-muted);
+  margin-top: 2px;
+}
+
+.floor-body {
+  margin-top: 14px;
+}
+
+.apartment-card {
+  background-color: var(--color-surface-sunken);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-top: 12px;
+  margin-left: 16px;
+}
+
+.apartment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.apartment-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.apartment-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+
+.apartment-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--color-primary-bg);
+  color: #4338ca;
+  border: 1px solid var(--color-primary-border);
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: var(--radius-md);
+  letter-spacing: -0.02em;
+}
+
+.apartment-body {
+  margin-top: 12px;
+}
+
+.room-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.room-tile {
+  width: 84px;
+  min-height: 84px;
+  border: 2px solid;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 6px;
+  cursor: pointer;
+  position: relative;
+  box-shadow: var(--shadow-xs);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.room-tile:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: var(--shadow-md);
+}
+
+.room-tile-empty {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  color: var(--color-muted);
+}
+
+.room-tile-partial {
+  background-color: var(--color-warning-bg);
+  border-color: var(--color-warning);
+  color: var(--color-warning-text);
+}
+
+.room-tile-full {
+  background-color: var(--color-primary-bg);
+  border-color: var(--color-primary);
+  color: #4338ca;
+}
+
+.room-tile-number {
+  font-weight: 700;
+  font-size: 14px;
+  color: inherit;
+}
+
+.room-tile-beds {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+  max-width: 60px;
+}
+
+.room-tile-bed-icon {
+  opacity: 0.3;
+}
+
+.room-tile-bed-icon-filled {
+  opacity: 1;
+}
+
+.room-tile-occupancy {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: inherit;
+  opacity: 0.8;
+}
+
+.room-tile-delete {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  font-size: 11px;
+  width: 18px;
+  height: 18px;
+  line-height: 1;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--color-border-soft);
+  background-color: var(--color-surface);
+  color: var(--color-faint);
+  box-shadow: var(--shadow-xs);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.room-tile-delete:hover {
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+}
